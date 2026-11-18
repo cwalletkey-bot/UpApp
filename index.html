@@ -3,38 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Segera Hadir</title>
+    <title>Hitung Mundur Acara</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f8f9fa;
-            color: #212529;
             text-align: center;
+            padding: 20px;
         }
+
         .container {
-            padding: 2rem;
-            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            max-width: 650px;
+            width: 100%;
         }
+
         h1 {
             font-size: 2rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
         }
+
         p {
-            font-size: 1.1rem;
-            color: #6c757d;
+            font-size: 1rem;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 20px 15px;
+            border-radius: 12px;
+            min-width: 110px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .number {
+            display: block;
+            font-size: 2.8rem;
+            font-weight: bold;
+            line-height: 1.1;
+            color: #ffdd57;
+        }
+
+        .label {
+            display: block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 8px;
+            color: #dcdcdc;
+        }
+
+        .finished-message {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4ade80;
+            display: none;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .time-box {
+                min-width: 75px;
+                padding: 15px 10px;
+            }
+            .number {
+                font-size: 2rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Sesuatu Yang Baru Segera Hadir Pembaharuan versi 1.24.5🚀🚀🚀</h1>
-        <p>Kami sedang menyiapkan pembaruan menarik untuk Anda. Nantikan peluncurannya dalam waktu dekat.</p>
-        <p>~~~CwalletKey~~~</p>
+        <h1>Segera Hadir</h1>
+        <p>Harap tunggu, kami sedang mempersiapkan sesuatu yang spesial untuk Anda🚀🚀🚀</p>
+
+        <div class="countdown" id="countdown-box">
+            <div class="time-box">
+                <span class="number" id="days">00</span>
+                <span class="label">Hari</span>
+            </div>
+            <div class="time-box">
+                <span class="number" id="hours">00</span>
+                <span class="label">Jam</span>
+            </div>
+            <div class="time-box">
+                <span class="number" id="minutes">00</span>
+                <span class="label">Menit</span>
+            </div>
+            <div class="time-box">
+                <span class="number" id="seconds">00</span>
+                <span class="label">Detik</span>
+            </div>
+        </div>
+
+        <div class="finished-message" id="finished">
+            Waktu Tunggu Telah Selesai!
+        </div>
     </div>
+
+    <script>
+        // ATUR TANGGAL TARGET DI SINI (Format: "Month DD, YYYY HH:MM:SS")
+        // Contoh di bawah diatur otomatis 7 hari dari waktu sekarang agar langsung terlihat berjalan
+        const targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() + 2); 
+        
+        // Jika ingin mengatur tanggal spesifik, hapus 2 baris di atas dan gunakan baris di bawah ini:
+        // const targetDate = new Date("December 31, 2026 23:59:59");
+
+        const targetTime = targetDate.getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetTime - now;
+
+            // Jika waktu habis
+            if (distance <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById("countdown-box").style.display = "none";
+                document.getElementById("finished").style.display = "block";
+                return;
+            }
+
+            // Perhitungan waktu
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Menampilkan hasil dengan format 2 digit (misal: 09)
+            document.getElementById("days").innerText = String(days).padStart(2, '0');
+            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+        }
+
+        // Jalankan fungsi setiap 1 detik
+        updateCountdown();
+        const timerInterval = setInterval(updateCountdown, 1000);
+    </script>
+
 </body>
 </html>
